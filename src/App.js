@@ -2,6 +2,7 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import BookComponent from './BookComponent'
 import BookShelf from './BookShelf'
+import BookGrid from './BookGrid'
 
 import './App.css'
 
@@ -9,6 +10,7 @@ class BooksApp extends React.Component {
   state = {
     tempBooks: [],
     shelfBooks: [],
+    searchBooks: [],
     /**
      * TODO: Instead of using this state variable to keep track of which page
      * we're on, use the URL in the browser's address bar. This will ensure that
@@ -17,15 +19,22 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false
   }
+  getSearchResults = (query) => {
+    BooksAPI.search(query,20).then((results) => {this.setState({searchBooks: results})})
+  }
+
+  setSearchBooks = (bookList) => {
+    console.log(bookList);
+    this.setState({searchBooks: bookList});
+  }
+
   getShelfBooks(){
     return(this.state.shelfBooks)
   }
 
   moveOrAddToShelf = (bookToMoveOrAdd, shelfToMoveTo) => {
     let exists=false;
-    console.log("about to move book");
     let newShelf = this.getShelfBooks();
-    console.log("shelf exists");
     newShelf.forEach(function(book) {
       if (bookToMoveOrAdd.id === book.id){
         exists = true;
@@ -37,7 +46,6 @@ class BooksApp extends React.Component {
       newShelf = newShelf.concat(bookToMoveOrAdd);
     }
     this.setState({shelfBooks: newShelf});
-    console.log("moved book");
   }
 
   componentDidMount() {
@@ -53,10 +61,6 @@ class BooksApp extends React.Component {
 
   }
   render() {
-    console.log("here we are")
-    console.log(this.state.tempBooks);
-    console.log(this.state.shelfBooks);
-    console.log("there we went")
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -72,12 +76,21 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input
+                  type="text" placeholder="Search by title or author"
+                  onChange={(event) => {
+                    console.log(event.target.value);
+                    this.getSearchResults(event.target.value);
+                  }}
+                />
 
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              {/*<ol className="books-grid"></ol>*/}
+              <BookGrid
+                bookList={this.state.searchBooks}
+                moveOrAddToShelf={this.moveOrAddToShelf}/>
             </div>
           </div>
         ) : (
@@ -87,24 +100,18 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <BookShelf
-                    bookList={this.state.shelfBooks.filter((book) => book.shelf === "currentlyReading")}
-                    moveOrAddToShelf={this.moveOrAddToShelf}/>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Want to Read</h2>
-                  <BookShelf
-                    bookList={this.state.shelfBooks.filter((book) => book.shelf === "wantToRead")}
-                    moveOrAddToShelf={this.moveOrAddToShelf}/>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Read</h2>
-                  <BookShelf
-                    bookList={this.state.shelfBooks.filter((book) => book.shelf === "read")}
-                    moveOrAddToShelf={this.moveOrAddToShelf}/>
-                </div>
+                <BookShelf
+                  bookList={this.state.shelfBooks.filter((book) => book.shelf === "currentlyReading")}
+                  moveOrAddToShelf={this.moveOrAddToShelf}
+                  shelfName="Currently Reading"/>
+                <BookShelf
+                  bookList={this.state.shelfBooks.filter((book) => book.shelf === "wantToRead")}
+                  moveOrAddToShelf={this.moveOrAddToShelf}
+                  shelfName="Want To Read"/>
+                <BookShelf
+                  bookList={this.state.shelfBooks.filter((book) => book.shelf === "read")}
+                  moveOrAddToShelf={this.moveOrAddToShelf}
+                  shelfName="Read"/>
               </div>
             </div>
             <div className="open-search">

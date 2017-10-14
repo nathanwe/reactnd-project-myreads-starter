@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import BookComponent from './BookComponent'
+import BookGrid from './BookGrid'
 
 class BookShelf extends Component {
 
   render() {
     let bookList = this.props.bookList || []
     return(
-    <div className="bookshelf-books">
-      <ol className="books-grid">
-        {bookList.map((book) => (
-          <li key={book.id}>
-          <BookComponent moveOrAddToShelf={this.props.moveOrAddToShelf} book={book}/>
-          </li>
-        ))}
-      </ol>
-    </div>
-  )
+      <div className="bookshelf">
+        <h2 className="bookshelf-title">{this.props.shelfName}</h2>
+        <div className="bookshelf-books">
+          <BookGrid
+            bookList={bookList}
+            moveOrAddToShelf={this.props.moveOrAddToShelf}
+          />
+        </div>
+      </div>
+      )
   }
 }
 
