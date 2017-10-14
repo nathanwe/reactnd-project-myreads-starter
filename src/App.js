@@ -20,9 +20,29 @@ class BooksApp extends React.Component {
     showSearchPage: false
   }
   getSearchResults = (query) => {
-    BooksAPI.search(query,20).then((results) => {this.setState({searchBooks: results})})
+    BooksAPI.search(query,20).then((results) => {
+      console.log("about to fix");
+      this.fixSearchResults(results);
+      console.log("fixed");
+      this.setState({searchBooks: results});
+    })
   }
 
+  fixSearchResults = (bookList) => {
+    bookList.forEach((newBook) => {
+      newBook.shelf = "none";
+      console.log("Processing book");
+      console.log(newBook);
+      console.log(this.state.shelfBooks);
+      this.state.shelfBooks.forEach((oldBook) => {
+        console.log("Processing oldBook");
+        console.log(oldBook);
+        if (newBook.id === oldBook.id){
+          newBook.shelf = oldBook.shelf;
+        }
+      })
+    })
+  }
   setSearchBooks = (bookList) => {
     console.log(bookList);
     this.setState({searchBooks: bookList});
