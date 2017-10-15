@@ -6,6 +6,7 @@ import BookGrid from './BookGrid'
 import SearchPage from './SearchPage'
 import { Route, BrowserRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import MainPage from './MainPage'
 
 import './App.css'
 
@@ -24,13 +25,9 @@ class BooksApp extends React.Component {
   }
 
 
-  getShelfBooks(){
-    return(this.state.shelfBooks)
-  }
-
   moveOrAddToShelf = (bookToMoveOrAdd, shelfToMoveTo) => {
     let exists=false;
-    let newShelf = this.getShelfBooks();
+    let newShelf = this.state.shelfBooks;
     newShelf.forEach(function(book) {
       if (bookToMoveOrAdd.id === book.id){
         exists = true;
@@ -61,42 +58,17 @@ class BooksApp extends React.Component {
       <BrowserRouter>
         <div className="app">
           {console.log("in app")}
-
           <Route path='/search' render={() => (
-            <div>
-              <SearchPage
-                moveOrAddToShelf={this.moveOrAddToShelf}
-                searchBooks={this.state.searchBooks}
-                shelfBooks={this.state.shelfBooks}/>
-            </div>
-            )}/>
-           <Route exact path='/' render={() => (
-              <div className="list-books">
-                <div className="list-books-title">
-                  <h1>MyReads</h1>
-                </div>
-                <div className="list-books-content">
-                  <div>
-                    <BookShelf
-                      bookList={this.state.shelfBooks.filter((book) => book.shelf === "currentlyReading")}
-                      moveOrAddToShelf={this.moveOrAddToShelf}
-                      shelfName="Currently Reading"/>
-                    <BookShelf
-                      bookList={this.state.shelfBooks.filter((book) => book.shelf === "wantToRead")}
-                      moveOrAddToShelf={this.moveOrAddToShelf}
-                      shelfName="Want To Read"/>
-                    <BookShelf
-                      bookList={this.state.shelfBooks.filter((book) => book.shelf === "read")}
-                      moveOrAddToShelf={this.moveOrAddToShelf}
-                      shelfName="Read"/>
-                  </div>
-                </div>
-                <div className="open-search">
-                  <Link to='/search'>Add a book</Link>
-                </div>
-              </div>
+            <SearchPage
+              moveOrAddToShelf={this.moveOrAddToShelf}
+              searchBooks={this.state.searchBooks}
+              shelfBooks={this.state.shelfBooks}/>
               )}/>
-
+          <Route exact path='/' render={() => (
+            <MainPage
+              moveOrAddToShelf={this.moveOrAddToShelf}
+              shelfBooks={this.state.shelfBooks}/>
+              )}/>
         </div>
       </BrowserRouter>
     )}
