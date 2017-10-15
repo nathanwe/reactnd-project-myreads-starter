@@ -8,8 +8,6 @@ class MainPage extends Component {
   render() {
     return (
       <div className="list-books">
-      {console.log("there books")}
-      {console.log(this.props.shelfBooks)}
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
