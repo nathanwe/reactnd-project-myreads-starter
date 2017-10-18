@@ -13,6 +13,7 @@ class BooksApp extends React.Component {
 
 
   moveOrAddToShelf = (bookToMoveOrAdd, shelfToMoveTo) => {
+    /*
     let exists=false;
     let newShelf = this.state.shelfBooks;
 
@@ -26,8 +27,20 @@ class BooksApp extends React.Component {
       bookToMoveOrAdd.shelf = shelfToMoveTo;
       newShelf = newShelf.concat(bookToMoveOrAdd);
     }
+
     this.setState({shelfBooks: newShelf});
     BooksAPI.update(bookToMoveOrAdd, shelfToMoveTo);
+    */
+    ///*
+    BooksAPI.update(bookToMoveOrAdd, shelfToMoveTo).then(() => {
+      bookToMoveOrAdd.shelf = shelfToMoveTo;
+      this.setState(prevState => ({
+        // Filter out the book and append it to the end of the list
+        // so it appears at the end of whatever shelf it was added to.
+        shelfBooks: prevState.shelfBooks.filter(book => book.id !== bookToMoveOrAdd.id).concat(bookToMoveOrAdd)
+      }))
+  });
+  //*/
   }
 
   componentDidMount() {

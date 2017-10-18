@@ -5,18 +5,20 @@ class BookComponent extends Component {
   render() {
     let book = this.props.book || {title: "this book hasn't loaded", authors: ["I. P. Freely"], shelf: "none",
       imageLinks: {thumbnail: "http://books.google.com/books/content?id=uu1mC6zWNTwC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73pGHfBNSsJG9Y8kRBpmLUft9O4BfItHioHolWNKOdLavw-SLcXADy3CPAfJ0_qMb18RmCa7Ds1cTdpM3dxAGJs8zfCfm8c6ggBIjzKT7XR5FIB53HHOhnsT7a0Cc-PpneWq9zX&source=gbs_api"}}
-    
+
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
           <div className="book-shelf-changer">
-            <select defaultValue={book.shelf}>
+            <select
+            value={book.shelf}
+            onChange={event => this.props.moveOrAddToShelf(book, event.target.value)}>
               <option value="none" disabled>Move to...</option>
-              <option onClick={() => this.props.moveOrAddToShelf(book,"currentlyReading")} value="currentlyReading">Currently Reading</option>
-              <option onClick={() => this.props.moveOrAddToShelf(book,"wantToRead")} value="wantToRead">Want to Read</option>
-              <option onClick={() => this.props.moveOrAddToShelf(book,"read")} value="read">Read</option>
-              <option onClick={() => this.props.moveOrAddToShelf(book,"none")} value="none">None</option>
+              <option value="currentlyReading">Currently Reading</option>
+              <option value="wantToRead">Want to Read</option>
+              <option value="read">Read</option>
+              <option value="none">None</option>
             </select>
           </div>
         </div>

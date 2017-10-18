@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import * as BooksAPI from './BooksAPI'
-import BookComponent from './BookComponent'
-import BookShelf from './BookShelf'
 import BookGrid from './BookGrid'
 import { Link } from 'react-router-dom'
 
